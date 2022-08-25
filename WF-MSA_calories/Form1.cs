@@ -70,7 +70,7 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            String index = comboBox1.SelectedValue.ToString();
+            string index = comboBox1.SelectedValue.ToString();
             if (index == "Завтрак")
             {
 
@@ -113,15 +113,25 @@ namespace WF_MSA_calories
                 string query = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{cb}\"";
                 OleDbCommand command = new OleDbCommand(query, myConnection);
                 OleDbDataReader reader = command.ExecuteReader();
+                DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
                 while (reader.Read())
                 {
-                    Column2.Items.Add(reader[0].ToString());
+                    comboCell.Items.Add(reader[0].ToString());
                 }
+                dataGridView1.Rows[e.RowIndex].Cells[1] = comboCell;
                 reader.Close();
             }
             else if (e.ColumnIndex == 1)
             {
-                
+                // Заполнение грамм и калорий
+                string cb = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string query = $"SELECT diet.d_gramm, diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                OleDbDataReader reader = command.ExecuteReader();
+                reader.Read();
+                dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
+                dataGridView1.Rows[e.RowIndex].Cells[3].Value = reader[1].ToString();
+                reader.Close();
             }
 
         }

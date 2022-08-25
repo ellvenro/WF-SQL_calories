@@ -95,13 +95,13 @@
             // 
             this.Column1.HeaderText = "Категория";
             this.Column1.Name = "Column1";
-            this.Column1.Width = 200;
+            this.Column1.Width = 150;
             // 
             // Column2
             // 
             this.Column2.HeaderText = "Продукт";
             this.Column2.Name = "Column2";
-            this.Column2.Width = 200;
+            this.Column2.Width = 150;
             // 
             // Column3
             // 
