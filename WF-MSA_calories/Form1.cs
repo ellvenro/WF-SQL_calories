@@ -119,6 +119,10 @@ namespace WF_MSA_calories
                 }
                 reader.Close();
             }
+            else if (e.ColumnIndex == 1)
+            {
+                
+            }
 
         }
     }
