@@ -51,6 +51,8 @@ namespace WF_MSA_calories
                 Column1.Items.Add(reader[0].ToString());
             }
             reader.Close();
+
+            label3.Text = "";
         }
 
         /// <summary>
@@ -136,9 +138,48 @@ namespace WF_MSA_calories
 
         }
 
+        /// <summary>
+        /// Кнопка подсчета за один прием пищи
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
+            int sum = 0;
+            try
+            {
+                for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                {
+                    string query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                        $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
 
+                    OleDbCommand command = new OleDbCommand(query, myConnection);
+                    command.ExecuteNonQuery();
+                    sum += int.Parse(dataGridView1[2, i].Value.ToString()) * int.Parse(dataGridView1[3, i].Value.ToString()) / 100;
+                }
+                label3.Text = sum.ToString();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Удаление строки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Выбрана пустая строка", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
