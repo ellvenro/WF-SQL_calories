@@ -96,5 +96,30 @@ namespace WF_MSA_calories
 
             }
         }
+
+        /// <summary>
+        /// Изменение значения ячейки таблицы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+            if (e.ColumnIndex == 0)
+            {
+                //Заполнение списка продуктов
+                string cb = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                string query = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{cb}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                OleDbDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Column2.Items.Add(reader[0].ToString());
+                }
+                reader.Close();
+            }
+
+        }
     }
 }
