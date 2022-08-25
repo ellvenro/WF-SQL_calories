@@ -70,31 +70,30 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string index = comboBox1.SelectedValue.ToString();
+            dataGridView1.Rows.Clear();
+            string index = comboBox1.SelectedItem.ToString();
+
+
             if (index == "Завтрак")
             {
-
+                string[] mas = { "Напиток", "Каша", "Другое" };
+                for (int i = 0; i < mas.Length; i++)
+                {
+                    dataGridView1.Rows.Add(mas[i], "", "", "");
+                    string query = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{mas[i]}\"";
+                    OleDbCommand command = new OleDbCommand(query, myConnection);
+                    OleDbDataReader reader = command.ExecuteReader();
+                    DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
+                    while (reader.Read())
+                    {
+                        comboCell.Items.Add(reader[0].ToString());
+                    }
+                    dataGridView1.Rows[i].Cells[1] = comboCell;
+                    reader.Close();
+                }
             }
-            else if (index == "Второй завтрак")
-            {
 
-            }
-            else if (index == "Обед")
-            {
 
-            }
-            else if (index == "Полдник")
-            {
-
-            }
-            else if (index == "Ужин")
-            {
-
-            }
-            else
-            {
-
-            }
         }
 
         /// <summary>
