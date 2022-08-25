@@ -146,18 +146,24 @@ namespace WF_MSA_calories
         private void button1_Click(object sender, EventArgs e)
         {
             int sum = 0;
+            string query;
+            OleDbCommand command;
             try
             {
                 for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                 {
-                    string query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                    query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
                         $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
 
-                    OleDbCommand command = new OleDbCommand(query, myConnection);
+                    command = new OleDbCommand(query, myConnection);
                     command.ExecuteNonQuery();
                     sum += int.Parse(dataGridView1[2, i].Value.ToString()) * int.Parse(dataGridView1[3, i].Value.ToString()) / 100;
                 }
                 label3.Text = sum.ToString();
+                string buf = comboBox1.SelectedItem.ToString();
+                query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
+                command = new OleDbCommand(query, myConnection);
+                command.ExecuteNonQuery();
             }
             catch (Exception exp)
             {
