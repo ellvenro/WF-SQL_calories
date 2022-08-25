@@ -72,27 +72,28 @@ namespace WF_MSA_calories
         {
             dataGridView1.Rows.Clear();
             string index = comboBox1.SelectedItem.ToString();
-
-
-            if (index == "Завтрак")
+            string query = "SELECT categoryes.c_category " +
+                "FROM eating INNER JOIN(categoryes INNER JOIN catEat ON categoryes.c_n = catEat.ce_category) ON eating.e_n = catEat.ce_meal " +
+                $"WHERE eating.e_meal = \"{index}\"";
+            OleDbCommand command = new OleDbCommand(query, myConnection);
+            OleDbDataReader reader = command.ExecuteReader();
+            int i = 0;
+            while (reader.Read())
             {
-                string[] mas = { "Напиток", "Каша", "Другое" };
-                for (int i = 0; i < mas.Length; i++)
+                dataGridView1.Rows.Add(reader[0].ToString(), "", "", "");
+                string query1 = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{reader[0].ToString()}\"";
+                OleDbCommand command1 = new OleDbCommand(query1, myConnection);
+                OleDbDataReader reader1 = command1.ExecuteReader();
+                DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
+                while (reader1.Read())
                 {
-                    dataGridView1.Rows.Add(mas[i], "", "", "");
-                    string query = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{mas[i]}\"";
-                    OleDbCommand command = new OleDbCommand(query, myConnection);
-                    OleDbDataReader reader = command.ExecuteReader();
-                    DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
-                    while (reader.Read())
-                    {
-                        comboCell.Items.Add(reader[0].ToString());
-                    }
-                    dataGridView1.Rows[i].Cells[1] = comboCell;
-                    reader.Close();
+                    comboCell.Items.Add(reader1[0].ToString());
                 }
+                dataGridView1.Rows[i].Cells[1] = comboCell;
+                i++;
+                reader1.Close();
             }
-
+            reader.Close();
 
         }
 
@@ -132,6 +133,11 @@ namespace WF_MSA_calories
                 dataGridView1.Rows[e.RowIndex].Cells[3].Value = reader[1].ToString();
                 reader.Close();
             }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
 
         }
     }
