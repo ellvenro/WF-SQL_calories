@@ -17,11 +17,6 @@ namespace WF_MSA_calories
         private OleDbConnection myConnection;
 
         /// <summary>
-        /// Флаг начала дня
-        /// </summary>
-        private bool start = true;
-
-        /// <summary>
         /// Инициализация формы
         /// </summary>
         public Form1()
@@ -58,7 +53,6 @@ namespace WF_MSA_calories
 
             if (command.ExecuteScalar().ToString() != "")
             {
-                start = false;
                 comboBox1.Text = command.ExecuteScalar().ToString();
             }
         }
@@ -113,7 +107,7 @@ namespace WF_MSA_calories
                 int i = 0;
                 while (reader.Read())
                 {
-                    dataGridView1.Rows.Add("", "", "", "");
+                    dataGridView1.Rows.Add("", "-", "0", "0");
                     dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
                     i++;
                 }
@@ -156,9 +150,9 @@ namespace WF_MSA_calories
                 OleDbDataReader reader = command.ExecuteReader();
                 reader.Read();
                 dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
-                int ccalBuf = int.Parse(reader[0].ToString()) * int.Parse(reader[1].ToString()) / 100;
+                float ccalBuf = float.Parse(reader[0].ToString()) * float.Parse(reader[1].ToString()) / (float)100;
 
-                dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
+                dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
                 reader.Close();
 
                 Sum();
@@ -169,8 +163,8 @@ namespace WF_MSA_calories
                 string cb = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
                 string query = $"SELECT diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
                 OleDbCommand command = new OleDbCommand(query, myConnection);
-                int ccalBuf = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * int.Parse(command.ExecuteScalar().ToString()) / 100;
-                dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
+                float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
+                dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
                 Sum();
             }
 
@@ -201,12 +195,18 @@ namespace WF_MSA_calories
                 {
                     for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                     {
-                        query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
-                            $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
-
+                        if (dataGridView1[2, i].Value.ToString() != "" && dataGridView1[3, i].Value.ToString() != "")
+                        {
+                            query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                                $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
+                            sum += int.Parse(dataGridView1[3, i].Value.ToString());
+                        }
+                        else
+                            query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                            $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"0\", \"0\")";
                         command = new OleDbCommand(query, myConnection);
                         command.ExecuteNonQuery();
-                        sum += int.Parse(dataGridView1[3, i].Value.ToString());
+                        
                     }
                     query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
                     command = new OleDbCommand(query, myConnection);
@@ -241,20 +241,28 @@ namespace WF_MSA_calories
             }
         }
 
+        /// <summary>
+        /// Подсчет суммы по дню и по приему пищи при изменении
+        /// </summary>
         private void Sum()
         {
-            int sum = 0;
+            float sum = 0;
             for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                 if (dataGridView1[3, i].Value.ToString() != "")
-                    sum += int.Parse(dataGridView1[3, i].Value.ToString());
-            label3.Text = sum.ToString();
+                    sum += float.Parse(dataGridView1[3, i].Value.ToString());
+            label3.Text = Math.Round(sum).ToString();
 
             string query = $"SELECT Sum([e_ccal]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
             OleDbCommand command = new OleDbCommand(query, myConnection);
-            int buf = int.Parse(command.ExecuteScalar().ToString()) + sum;
+            int buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sum);
             label5.Text = buf.ToString();
         }
 
+        /// <summary>
+        /// Очистка БД
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             string query = $"UPDATE buf SET buf.buf_meal = \"\" WHERE buf.buf_n=1";
@@ -275,5 +283,7 @@ namespace WF_MSA_calories
             label5.Text = "0";
 
         }
+
+
     }
 }
