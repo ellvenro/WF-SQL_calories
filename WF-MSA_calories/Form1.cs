@@ -56,7 +56,10 @@ namespace WF_MSA_calories
             command = new OleDbCommand(query, myConnection);
 
             if (command.ExecuteScalar().ToString() != "")
+            {
                 start = false;
+                comboBox1.Text = command.ExecuteScalar().ToString();
+            }
         }
 
         /// <summary>
@@ -178,6 +181,9 @@ namespace WF_MSA_calories
             OleDbCommand command;
             try
             {
+                query = $"DELETE day.d_meal FROM [day] WHERE day.d_meal=\"{comboBox1.SelectedItem.ToString()}\"";
+                command = new OleDbCommand(query, myConnection);
+                command.ExecuteNonQuery();
                 for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                 {
                     query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
@@ -185,7 +191,7 @@ namespace WF_MSA_calories
 
                     command = new OleDbCommand(query, myConnection);
                     command.ExecuteNonQuery();
-                    sum += int.Parse(dataGridView1[2, i].Value.ToString()) * int.Parse(dataGridView1[3, i].Value.ToString()) / 100;
+                    sum += int.Parse(dataGridView1[3, i].Value.ToString());
                 }
                 label3.Text = sum.ToString();
                 query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
