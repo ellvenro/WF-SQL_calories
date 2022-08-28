@@ -202,8 +202,7 @@ namespace WF_MSA_calories
                             sum += int.Parse(dataGridView1[3, i].Value.ToString());
                         }
                         else
-                            query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
-                            $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"0\", \"0\")";
+                            throw new Exception("Строка не заполнена");
                         command = new OleDbCommand(query, myConnection);
                         command.ExecuteNonQuery();
                         
@@ -291,7 +290,9 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            new addForm { Owner = this }.ShowDialog();
+            addForm form2 = new addForm(myConnection);
+            form2.Show();
+            //new addForm { Owner = this }.ShowDialog();
         }
 
         /// <summary>
@@ -301,6 +302,7 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
+            
             new reportForm { Owner = this }.ShowDialog();
         }
     }
