@@ -51,6 +51,7 @@ namespace WF_MSA_calories
             reader.Close();
 
             label3.Text = "";
+            label5.Text = "";
 
             query = "SELECT buf.buf_meal FROM buf WHERE buf.buf_n=1";
             command = new OleDbCommand(query, myConnection);
@@ -99,9 +100,7 @@ namespace WF_MSA_calories
                     i++;
                 }
                 reader.Close();
-                query = $"SELECT eating.e_ccal FROM [eating] WHERE eating.e_meal=\"{index}\"";
-                command = new OleDbCommand(query, myConnection);
-                label3.Text = command.ExecuteScalar().ToString();
+                Sum();
             }
             else
             {
@@ -119,7 +118,7 @@ namespace WF_MSA_calories
                     i++;
                 }
                 reader.Close();
-                label3.Text = "0";
+                Sum();
             }
 
         }
@@ -209,10 +208,10 @@ namespace WF_MSA_calories
                         command.ExecuteNonQuery();
                         sum += int.Parse(dataGridView1[3, i].Value.ToString());
                     }
-                    label3.Text = sum.ToString();
                     query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
                     command = new OleDbCommand(query, myConnection);
                     command.ExecuteNonQuery();
+                    Sum();
                 }
                 query = $"UPDATE buf SET buf.buf_meal = \"{comboBox1.SelectedItem.ToString()}\" WHERE buf.buf_n=1";
                 command = new OleDbCommand(query, myConnection);
@@ -246,8 +245,35 @@ namespace WF_MSA_calories
         {
             int sum = 0;
             for (int i = 0; i < dataGridView1.RowCount - 1; i++)
-                sum += int.Parse(dataGridView1[3, i].Value.ToString());
+                if (dataGridView1[3, i].Value.ToString() != "")
+                    sum += int.Parse(dataGridView1[3, i].Value.ToString());
             label3.Text = sum.ToString();
+
+            string query = $"SELECT Sum([e_ccal]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
+            OleDbCommand command = new OleDbCommand(query, myConnection);
+            int buf = int.Parse(command.ExecuteScalar().ToString()) + sum;
+            label5.Text = buf.ToString();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string query = $"UPDATE buf SET buf.buf_meal = \"\" WHERE buf.buf_n=1";
+            OleDbCommand command = new OleDbCommand(query, myConnection);
+            command.ExecuteNonQuery();
+
+            query = "UPDATE eating SET eating.e_ccal = 0";
+            command = new OleDbCommand(query, myConnection);
+            command.ExecuteNonQuery();
+
+            query = "DELETE day.d_name FROM[day]";
+            command = new OleDbCommand(query, myConnection);
+            command.ExecuteNonQuery();
+
+            comboBox1.Text = "";
+            dataGridView1.Rows.Clear();
+            label3.Text = "0";
+            label5.Text = "0";
+
         }
     }
 }

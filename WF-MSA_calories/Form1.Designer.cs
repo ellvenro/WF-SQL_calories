@@ -39,6 +39,9 @@
             this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,14 +83,14 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(317, 18);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 17);
+            this.label2.Size = new System.Drawing.Size(85, 17);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Всего кКал";
+            this.label2.Text = "Всего кКал:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(415, 18);
+            this.label3.Location = new System.Drawing.Point(408, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 17);
             this.label3.TabIndex = 4;
@@ -139,11 +142,42 @@
             this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.Column4.Width = 150;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(515, 18);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(102, 17);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Общая сумма:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(623, 18);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(46, 17);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "label5";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(701, 397);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(106, 31);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "Отчистить";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(922, 450);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
@@ -173,6 +207,9 @@
         private System.Windows.Forms.DataGridViewComboBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button3;
     }
 }
 
