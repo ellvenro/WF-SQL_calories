@@ -127,8 +127,19 @@ namespace WF_MSA_calories
                 OleDbDataReader reader = command.ExecuteReader();
                 reader.Read();
                 dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
-                dataGridView1.Rows[e.RowIndex].Cells[3].Value = reader[1].ToString();
+                int ccalBuf = int.Parse(reader[0].ToString()) * int.Parse(reader[1].ToString()) / 100;
+
+                dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
                 reader.Close();
+            }
+            else if (e.ColumnIndex == 2)
+            {
+                //Заполнение калорийности
+                string cb = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+                string query = $"SELECT diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                int ccalBuf = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * int.Parse(command.ExecuteScalar().ToString()) / 100;
+                dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
             }
 
         }
