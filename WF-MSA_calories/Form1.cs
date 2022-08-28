@@ -99,6 +99,9 @@ namespace WF_MSA_calories
                     i++;
                 }
                 reader.Close();
+                query = $"SELECT eating.e_ccal FROM [eating] WHERE eating.e_meal=\"{index}\"";
+                command = new OleDbCommand(query, myConnection);
+                label3.Text = command.ExecuteScalar().ToString();
             }
             else
             {
@@ -116,6 +119,7 @@ namespace WF_MSA_calories
                     i++;
                 }
                 reader.Close();
+                label3.Text = "0";
             }
 
         }
@@ -157,6 +161,8 @@ namespace WF_MSA_calories
 
                 dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
                 reader.Close();
+
+                Sum();
             }
             else if (e.ColumnIndex == 2)
             {
@@ -166,6 +172,7 @@ namespace WF_MSA_calories
                 OleDbCommand command = new OleDbCommand(query, myConnection);
                 int ccalBuf = int.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * int.Parse(command.ExecuteScalar().ToString()) / 100;
                 dataGridView1.Rows[e.RowIndex].Cells[3].Value = ccalBuf.ToString();
+                Sum();
             }
 
         }
@@ -185,19 +192,28 @@ namespace WF_MSA_calories
                 query = $"DELETE day.d_meal FROM [day] WHERE day.d_meal=\"{comboBox1.SelectedItem.ToString()}\"";
                 command = new OleDbCommand(query, myConnection);
                 command.ExecuteNonQuery();
-                for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                if (dataGridView1.RowCount == 0)
                 {
-                    query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
-                        $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
-
+                    query = $"UPDATE eating SET eating.e_ccal = 0 WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
                     command = new OleDbCommand(query, myConnection);
                     command.ExecuteNonQuery();
-                    sum += int.Parse(dataGridView1[3, i].Value.ToString());
                 }
-                label3.Text = sum.ToString();
-                query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
-                command = new OleDbCommand(query, myConnection);
-                command.ExecuteNonQuery();
+                else
+                {
+                    for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                    {
+                        query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                            $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
+
+                        command = new OleDbCommand(query, myConnection);
+                        command.ExecuteNonQuery();
+                        sum += int.Parse(dataGridView1[3, i].Value.ToString());
+                    }
+                    label3.Text = sum.ToString();
+                    query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
+                    command = new OleDbCommand(query, myConnection);
+                    command.ExecuteNonQuery();
+                }
                 query = $"UPDATE buf SET buf.buf_meal = \"{comboBox1.SelectedItem.ToString()}\" WHERE buf.buf_n=1";
                 command = new OleDbCommand(query, myConnection);
                 command.ExecuteNonQuery();
@@ -218,11 +234,20 @@ namespace WF_MSA_calories
             try
             {
                 dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                Sum();
             }
             catch (Exception)
             {
                 MessageBox.Show("Выбрана пустая строка", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void Sum()
+        {
+            int sum = 0;
+            for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                sum += int.Parse(dataGridView1[3, i].Value.ToString());
+            label3.Text = sum.ToString();
         }
     }
 }
