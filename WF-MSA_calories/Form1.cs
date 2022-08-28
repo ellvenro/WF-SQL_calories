@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OleDb;
 
@@ -22,6 +15,11 @@ namespace WF_MSA_calories
         /// Поле - ссылка на экземпляр класса OleDbConnection для соединения с БД
         /// </summary>
         private OleDbConnection myConnection;
+
+        /// <summary>
+        /// Флаг начала дня
+        /// </summary>
+        private bool start = true;
 
         /// <summary>
         /// Инициализация формы
@@ -53,6 +51,12 @@ namespace WF_MSA_calories
             reader.Close();
 
             label3.Text = "";
+
+            query = "SELECT buf.buf_meal FROM buf WHERE buf.buf_n=1";
+            command = new OleDbCommand(query, myConnection);
+
+            if (command.ExecuteScalar().ToString() != "")
+                start = false;
         }
 
         /// <summary>
@@ -82,18 +86,9 @@ namespace WF_MSA_calories
             int i = 0;
             while (reader.Read())
             {
-                dataGridView1.Rows.Add(reader[0].ToString(), "", "", "");
-                string query1 = $"SELECT diet.d_name FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category WHERE categoryes.c_category=\"{reader[0].ToString()}\"";
-                OleDbCommand command1 = new OleDbCommand(query1, myConnection);
-                OleDbDataReader reader1 = command1.ExecuteReader();
-                DataGridViewComboBoxCell comboCell = new DataGridViewComboBoxCell();
-                while (reader1.Read())
-                {
-                    comboCell.Items.Add(reader1[0].ToString());
-                }
-                dataGridView1.Rows[i].Cells[1] = comboCell;
+                dataGridView1.Rows.Add("", "", "", "");
+                dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
                 i++;
-                reader1.Close();
             }
             reader.Close();
 
@@ -160,8 +155,10 @@ namespace WF_MSA_calories
                     sum += int.Parse(dataGridView1[2, i].Value.ToString()) * int.Parse(dataGridView1[3, i].Value.ToString()) / 100;
                 }
                 label3.Text = sum.ToString();
-                string buf = comboBox1.SelectedItem.ToString();
                 query = $"UPDATE eating SET eating.e_ccal = {sum} WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
+                command = new OleDbCommand(query, myConnection);
+                command.ExecuteNonQuery();
+                query = $"UPDATE buf SET buf.buf_meal = \"{comboBox1.SelectedItem.ToString()}\" WHERE buf.buf_n=1";
                 command = new OleDbCommand(query, myConnection);
                 command.ExecuteNonQuery();
             }
