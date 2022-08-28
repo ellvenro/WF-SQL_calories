@@ -70,7 +70,7 @@ namespace WF_MSA_calories
         }
 
         /// <summary>
-        /// смена приема пищи
+        /// Смена приема пищи
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -80,6 +80,7 @@ namespace WF_MSA_calories
             string index = comboBox1.SelectedItem.ToString();
             if (start)
             {
+                //Если начало программы, то стандартное заполнение
                 string query = "SELECT categoryes.c_category " +
                     "FROM eating INNER JOIN(categoryes INNER JOIN catEat ON categoryes.c_n = catEat.ce_category) ON eating.e_n = catEat.ce_meal " +
                     $"WHERE eating.e_meal = \"{index}\"";
@@ -96,6 +97,7 @@ namespace WF_MSA_calories
             }
             else
             {
+                //Если дань продолжается, то заполнить имеющимися значениями
                 string query = $"SELECT day.d_categoryes, day.d_name, day.d_gramm, day.d_ccal FROM [day] WHERE day.d_meal=\"{index}\"";
                 OleDbCommand command = new OleDbCommand(query, myConnection);
                 OleDbDataReader reader = command.ExecuteReader();
