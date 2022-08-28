@@ -14,7 +14,7 @@ namespace WF_MSA_calories
         /// <summary>
         /// Поле - ссылка на экземпляр класса OleDbConnection для соединения с БД
         /// </summary>
-        private OleDbConnection myConnection;
+        public OleDbConnection myConnection;
 
         /// <summary>
         /// Инициализация формы
@@ -284,6 +284,14 @@ namespace WF_MSA_calories
 
         }
 
-
+        /// <summary>
+        /// Добавление, удаление, изменение данных
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button4_Click(object sender, EventArgs e)
+        {
+            new addForm { Owner = this }.ShowDialog();
+        }
     }
 }
