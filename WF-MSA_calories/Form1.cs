@@ -157,15 +157,23 @@ namespace WF_MSA_calories
             {
                 // Заполнение грамм и калорий
                 string cb = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-                string query = $"SELECT diet.d_gramm, diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
-                OleDbCommand command = new OleDbCommand(query, myConnection);
-                OleDbDataReader reader = command.ExecuteReader();
-                reader.Read();
-                dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
-                float ccalBuf = float.Parse(reader[0].ToString()) * float.Parse(reader[1].ToString()) / (float)100;
+                if (cb != "")
+                {
+                    string query = $"SELECT diet.d_gramm, diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
+                    OleDbCommand command = new OleDbCommand(query, myConnection);
+                    OleDbDataReader reader = command.ExecuteReader();
+                    reader.Read();
+                    dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
+                    float ccalBuf = float.Parse(reader[0].ToString()) * float.Parse(reader[1].ToString()) / (float)100;
 
-                dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
-                reader.Close();
+                    dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                    reader.Close();
+                }
+                else
+                {
+                    dataGridView1.Rows[e.RowIndex].Cells[2].Value = "0";
+                    dataGridView1.Rows[e.RowIndex].Cells[3].Value = "0";
+                }
 
                 Sum();
             }
@@ -177,8 +185,11 @@ namespace WF_MSA_calories
                 OleDbCommand command = new OleDbCommand(query, myConnection);
                 try
                 {
-                    float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
-                    dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                    if (cb != "")
+                    {
+                        float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
+                        dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                    }
                     Sum();
                 }
                 catch (Exception exp)
@@ -214,7 +225,12 @@ namespace WF_MSA_calories
                 {
                     for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                     {
-                        if (dataGridView1[2, i].Value.ToString() != "" && dataGridView1[3, i].Value.ToString() != "")
+                        if (dataGridView1[1, i].Value == null)
+                        {
+                            query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
+                                $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"\", \"0\", \"0\")";
+                        }
+                        else if (dataGridView1[2, i].Value.ToString() != "" && dataGridView1[3, i].Value.ToString() != "")
                         {
                             query = "INSERT INTO [day] ( d_meal, d_categoryes, d_name, d_gramm, d_ccal )" +
                                 $"VALUES (\"{comboBox1.SelectedItem.ToString()}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{dataGridView1[1, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[3, i].Value.ToString())}\")";
