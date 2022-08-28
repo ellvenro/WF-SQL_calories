@@ -78,19 +78,39 @@ namespace WF_MSA_calories
         {
             dataGridView1.Rows.Clear();
             string index = comboBox1.SelectedItem.ToString();
-            string query = "SELECT categoryes.c_category " +
-                "FROM eating INNER JOIN(categoryes INNER JOIN catEat ON categoryes.c_n = catEat.ce_category) ON eating.e_n = catEat.ce_meal " +
-                $"WHERE eating.e_meal = \"{index}\"";
-            OleDbCommand command = new OleDbCommand(query, myConnection);
-            OleDbDataReader reader = command.ExecuteReader();
-            int i = 0;
-            while (reader.Read())
+            if (start)
             {
-                dataGridView1.Rows.Add("", "", "", "");
-                dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
-                i++;
+                string query = "SELECT categoryes.c_category " +
+                    "FROM eating INNER JOIN(categoryes INNER JOIN catEat ON categoryes.c_n = catEat.ce_category) ON eating.e_n = catEat.ce_meal " +
+                    $"WHERE eating.e_meal = \"{index}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                OleDbDataReader reader = command.ExecuteReader();
+                int i = 0;
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add("", "", "", "");
+                    dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
+                    i++;
+                }
+                reader.Close();
             }
-            reader.Close();
+            else
+            {
+                string query = $"SELECT day.d_categoryes, day.d_name, day.d_gramm, day.d_ccal FROM [day] WHERE day.d_meal=\"{index}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                OleDbDataReader reader = command.ExecuteReader();
+                int i = 0;
+                while (reader.Read())
+                {
+                    dataGridView1.Rows.Add("", "", "", "");
+                    dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
+                    dataGridView1.Rows[i].Cells[1].Value = reader[1].ToString();
+                    dataGridView1.Rows[i].Cells[2].Value = reader[2].ToString();
+                    dataGridView1.Rows[i].Cells[3].Value = reader[3].ToString();
+                    i++;
+                }
+                reader.Close();
+            }
 
         }
 
