@@ -22,38 +22,50 @@ namespace WF_MSA_calories
         public Form1()
         {
             InitializeComponent();
-            myConnection = new OleDbConnection(connectString);
-            myConnection.Open();
-
-            //Заполнение списка приемов пищи
-            string query = "SELECT eating.e_meal FROM eating";
-            OleDbCommand command = new OleDbCommand(query, myConnection);
-            OleDbDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            bool flag = true;
+            try
             {
-                comboBox1.Items.Add(reader[0].ToString());
+                myConnection = new OleDbConnection(connectString);
+                myConnection.Open();
             }
-            reader.Close();
-
-            //Заполнение списка категорий в таблице
-            query = "SELECT categoryes.c_category FROM categoryes";
-            command = new OleDbCommand(query, myConnection);
-            reader = command.ExecuteReader();
-            while (reader.Read())
+            catch (Exception exp)
             {
-                Column1.Items.Add(reader[0].ToString());
+                MessageBox.Show(exp.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                flag = false;
             }
-            reader.Close();
 
-            label3.Text = "";
-            label5.Text = "";
-
-            query = "SELECT buf.buf_meal FROM buf WHERE buf.buf_n=1";
-            command = new OleDbCommand(query, myConnection);
-
-            if (command.ExecuteScalar().ToString() != "")
+            if (flag)
             {
-                comboBox1.Text = command.ExecuteScalar().ToString();
+                //Заполнение списка приемов пищи
+                string query = "SELECT eating.e_meal FROM eating";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                OleDbDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    comboBox1.Items.Add(reader[0].ToString());
+                }
+                reader.Close();
+
+                //Заполнение списка категорий в таблице
+                query = "SELECT categoryes.c_category FROM categoryes";
+                command = new OleDbCommand(query, myConnection);
+                reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Column1.Items.Add(reader[0].ToString());
+                }
+                reader.Close();
+
+                label3.Text = "";
+                label5.Text = "";
+
+                query = "SELECT buf.buf_meal FROM buf WHERE buf.buf_n=1";
+                command = new OleDbCommand(query, myConnection);
+
+                if (command.ExecuteScalar().ToString() != "")
+                {
+                    comboBox1.Text = command.ExecuteScalar().ToString();
+                }
             }
         }
 
@@ -107,7 +119,7 @@ namespace WF_MSA_calories
                 int i = 0;
                 while (reader.Read())
                 {
-                    dataGridView1.Rows.Add("", "-", "0", "0");
+                    dataGridView1.Rows.Add("", "", "0", "0");
                     dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
                     i++;
                 }
@@ -163,9 +175,16 @@ namespace WF_MSA_calories
                 string cb = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
                 string query = $"SELECT diet.d_ccal FROM diet WHERE diet.d_name=\"{cb}\"";
                 OleDbCommand command = new OleDbCommand(query, myConnection);
-                float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
-                dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
-                Sum();
+                try
+                {
+                    float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
+                    dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                    Sum();
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
         }
@@ -245,16 +264,23 @@ namespace WF_MSA_calories
         /// </summary>
         private void Sum()
         {
-            float sum = 0;
-            for (int i = 0; i < dataGridView1.RowCount - 1; i++)
-                if (dataGridView1[3, i].Value.ToString() != "")
-                    sum += float.Parse(dataGridView1[3, i].Value.ToString());
-            label3.Text = Math.Round(sum).ToString();
+            try
+            {
+                float sum = 0;
+                for (int i = 0; i < dataGridView1.RowCount - 1; i++)
+                    if (dataGridView1[3, i].Value.ToString() != "")
+                        sum += float.Parse(dataGridView1[3, i].Value.ToString());
+                label3.Text = Math.Round(sum).ToString();
 
-            string query = $"SELECT Sum([e_ccal]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
-            OleDbCommand command = new OleDbCommand(query, myConnection);
-            int buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sum);
-            label5.Text = buf.ToString();
+                string query = $"SELECT Sum([e_ccal]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
+                OleDbCommand command = new OleDbCommand(query, myConnection);
+                int buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sum);
+                label5.Text = buf.ToString();
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
@@ -292,7 +318,6 @@ namespace WF_MSA_calories
         {
             addForm form2 = new addForm(myConnection);
             form2.Show();
-            //new addForm { Owner = this }.ShowDialog();
         }
 
         /// <summary>
@@ -302,8 +327,8 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void button5_Click(object sender, EventArgs e)
         {
-            
-            new reportForm { Owner = this }.ShowDialog();
+            reportForm form3 = new reportForm(myConnection);
+            form3.Show();
         }
     }
 }
