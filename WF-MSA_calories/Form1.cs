@@ -293,5 +293,15 @@ namespace WF_MSA_calories
         {
             new addForm { Owner = this }.ShowDialog();
         }
+
+        /// <summary>
+        /// Форма отчета
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button5_Click(object sender, EventArgs e)
+        {
+            new reportForm { Owner = this }.ShowDialog();
+        }
     }
 }
