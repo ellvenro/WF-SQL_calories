@@ -100,9 +100,15 @@ namespace WF_MSA_calories
                 {
                     dataGridView1.Rows.Add("", "", "", "");
                     dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
-                    dataGridView1.Rows[i].Cells[1].Value = reader[1].ToString();
-                    dataGridView1.Rows[i].Cells[2].Value = reader[2].ToString();
-                    dataGridView1.Rows[i].Cells[3].Value = reader[3].ToString();
+                    string cb = dataGridView1.Rows[i].Cells[0].Value.ToString();
+                    string query1 = $"SELECT diet.d_gramm, diet.d_ccal FROM diet WHERE diet.d_name=\"{reader[1].ToString()}\"";
+                    OleDbCommand command1 = new OleDbCommand(query1, myConnection);
+                    if (command1.ExecuteScalar() != null)
+                    {
+                        dataGridView1.Rows[i].Cells[1].Value = reader[1].ToString();
+                        dataGridView1.Rows[i].Cells[2].Value = reader[2].ToString();
+                        dataGridView1.Rows[i].Cells[3].Value = reader[3].ToString();
+                    }
                     i++;
                 }
                 reader.Close();
@@ -163,10 +169,13 @@ namespace WF_MSA_calories
                     OleDbCommand command = new OleDbCommand(query, myConnection);
                     OleDbDataReader reader = command.ExecuteReader();
                     reader.Read();
-                    dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
-                    float ccalBuf = float.Parse(reader[0].ToString()) * float.Parse(reader[1].ToString()) / (float)100;
+                    if (reader.HasRows)
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[2].Value = reader[0].ToString();
+                        float ccalBuf = float.Parse(reader[0].ToString()) * float.Parse(reader[1].ToString()) / (float)100;
 
-                    dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                        dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
+                    }
                     reader.Close();
                 }
                 else
@@ -185,7 +194,7 @@ namespace WF_MSA_calories
                 OleDbCommand command = new OleDbCommand(query, myConnection);
                 try
                 {
-                    if (cb != "")
+                    if (cb != "" && command.ExecuteScalar() != null)
                     {
                         float ccalBuf = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * float.Parse(command.ExecuteScalar().ToString()) / 100;
                         dataGridView1.Rows[e.RowIndex].Cells[3].Value = Math.Round(ccalBuf).ToString();
