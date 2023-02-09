@@ -43,13 +43,16 @@ namespace WF_MSA_calories
                 listLV2[i].Visible = false;
             }
 
-            string query = "SELECT eating.e_meal, eating.e_ccal FROM eating";
+            string query = "SELECT eating.e_meal, eating.e_ccal, e_belk, e_giri, e_ugl FROM eating";
             OleDbCommand command = new OleDbCommand(query, myConnection);
             OleDbDataReader reader = command.ExecuteReader();
             int sum = 0;
+            int sumb = 0;
+            int sumg = 0;
+            int sumu = 0;
             while (reader.Read())
             {
-                string query1 = $"SELECT day.d_name, day.d_gramm, day.d_ccal FROM [day] WHERE day.d_meal=\"{reader[0].ToString()}\"";
+                string query1 = $"SELECT day.d_name, day.d_gramm, day.d_ccal, d_belk, d_giri, d_ugl FROM [day] WHERE day.d_meal=\"{reader[0].ToString()}\"";
                 OleDbCommand command1 = new OleDbCommand(query1, myConnection);
                 OleDbDataReader reader1 = command1.ExecuteReader();
 
@@ -62,14 +65,18 @@ namespace WF_MSA_calories
                             if (reader1[0].ToString() != "")
                             {
                                 listLV[i].Items.Add(reader1[0].ToString());
-                                listLV2[i].Items.Add(reader1[1].ToString() + "/" + reader1[2].ToString());
-                                cnt++;
+                                listLV2[i].Items.Add(reader1[1].ToString() + "/" + reader1[2].ToString() + "/" + reader1[3].ToString() 
+                                    + "/" + reader1[4].ToString() + "/" + reader1[5].ToString());
+                cnt++;
                             }
                         }
                         if (cnt != 0)
                         {
-                            listL[i].Text = reader[1].ToString();
+                            listL[i].Text = reader[1].ToString() + "/" + reader[2].ToString() + "/" + reader[3].ToString() + "/" + reader[4].ToString();
                             sum += int.Parse(reader[1].ToString());
+                            sumb += int.Parse(reader[2].ToString());
+                            sumg += int.Parse(reader[3].ToString());
+                            sumu += int.Parse(reader[4].ToString());
                             listGB[i].Visible = true;
                             listLV[i].Visible = true;
                             listL[i].Visible = true;
@@ -80,7 +87,7 @@ namespace WF_MSA_calories
 
             }
             reader.Close();
-            label7.Text = sum.ToString();
+            label7.Text = sum.ToString() + "/" + sumb.ToString() + "/" + sumg.ToString() + "/" + sumu.ToString();
         }
     }
 }
