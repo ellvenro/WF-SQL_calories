@@ -43,7 +43,7 @@ namespace WF_MSA_calories
             if (radioButton1.Checked || radioButton3.Checked)
             {
                 string index = comboBox1.SelectedItem.ToString();
-                string query = "SELECT diet.d_name, diet.d_ccal, diet.d_gramm " +
+                string query = "SELECT diet.d_name, diet.d_ccal, diet.d_gramm, diet.d_belk, diet.d_giri, diet.d_ugl " +
                     "FROM categoryes INNER JOIN diet ON categoryes.c_n = diet.c_category " +
                     $"WHERE categoryes.c_category = \"{index}\"";
                 OleDbCommand command = new OleDbCommand(query, myConnection);
@@ -53,10 +53,22 @@ namespace WF_MSA_calories
                     int i = 0;
                     while (reader.Read())
                     {
-                        dataGridView1.Rows.Add("", "", "", "");
+                        dataGridView1.Rows.Add("", "", "", "", "", "", "");
                         dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
                         dataGridView1.Rows[i].Cells[1].Value = reader[2].ToString();
                         dataGridView1.Rows[i].Cells[2].Value = reader[1].ToString();
+                        if (reader[3].ToString() != "")
+                            dataGridView1.Rows[i].Cells[3].Value = reader[3].ToString();
+                        else
+                            dataGridView1.Rows[i].Cells[3].Value = "0";
+                        if (reader[4].ToString() != "")
+                            dataGridView1.Rows[i].Cells[4].Value = reader[4].ToString();
+                        else
+                            dataGridView1.Rows[i].Cells[4].Value = "0";
+                        if (reader[5].ToString() != "")
+                            dataGridView1.Rows[i].Cells[5].Value = reader[5].ToString();
+                        else
+                            dataGridView1.Rows[i].Cells[5].Value = "0";
                         i++;
                     }
                     reader.Close();
@@ -81,6 +93,9 @@ namespace WF_MSA_calories
                     Column1.ReadOnly = false;
                     Column2.ReadOnly = false;
                     Column3.ReadOnly = false;
+                    Column4.ReadOnly = false;
+                    Column5.ReadOnly = false;
+                    Column6.ReadOnly = false;
                 }
                 else if (radioButton2.Checked)
                 {
@@ -92,8 +107,14 @@ namespace WF_MSA_calories
                             command = new OleDbCommand(query, myConnection);
                             int j = int.Parse(command.ExecuteScalar().ToString());
 
-                            query = "INSERT INTO [diet] ( c_category, d_name, d_ccal, d_gramm )" +
-                                $"VALUES (\"{j}\", \"{dataGridView1[0, i].Value.ToString()}\", \"{int.Parse(dataGridView1[2, i].Value.ToString())}\", \"{int.Parse(dataGridView1[1, i].Value.ToString())}\")";
+                            query = "INSERT INTO [diet] ( c_category, d_name, d_ccal, d_gramm, d_belk, d_giri, d_ugl )" +
+                                $"VALUES (\"{j}\", \"{dataGridView1[0, i].Value.ToString()}\", " +
+                                $"\"{int.Parse(dataGridView1[2, i].Value.ToString())}\", " +
+                                $"\"{int.Parse(dataGridView1[1, i].Value.ToString())}\", " +
+                                $"\"{int.Parse(dataGridView1[3, i].Value.ToString())}\", " +
+                                $"\"{int.Parse(dataGridView1[4, i].Value.ToString())}\", " +
+                                $"\"{int.Parse(dataGridView1[5, i].Value.ToString())}\" " +
+                                $")";
                             command = new OleDbCommand(query, myConnection);
                             command.ExecuteNonQuery();
                         }
@@ -106,7 +127,13 @@ namespace WF_MSA_calories
                     {
                         if (dataGridView1[1, i].Value.ToString() != "" && dataGridView1[2, i].Value.ToString() != "")
                         {
-                            query = $"UPDATE diet SET diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())} WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"";
+                            query = $"UPDATE diet SET " +
+                                $"diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, " +
+                                $"diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())}, " +
+                                $"diet.d_belk = {int.Parse(dataGridView1[3, i].Value.ToString())}, " +
+                                $"diet.d_giri = {int.Parse(dataGridView1[4, i].Value.ToString())}, " +
+                                $"diet.d_ugl = {int.Parse(dataGridView1[5, i].Value.ToString())} " +
+                                $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"";
                             command = new OleDbCommand(query, myConnection);
                             command.ExecuteNonQuery();
                         }
@@ -129,6 +156,9 @@ namespace WF_MSA_calories
             Column1.ReadOnly = false;
             Column2.ReadOnly = false;
             Column3.ReadOnly = false;
+            Column4.ReadOnly = false;
+            Column5.ReadOnly = false;
+            Column6.ReadOnly = false;
             button1.Text = "Добавить";
         }
 
@@ -137,6 +167,9 @@ namespace WF_MSA_calories
             Column1.ReadOnly = true;
             Column2.ReadOnly = true;
             Column3.ReadOnly = true;
+            Column4.ReadOnly = true;
+            Column5.ReadOnly = true;
+            Column6.ReadOnly = true;
             button1.Text = "Удалить";
         }
 
@@ -145,6 +178,9 @@ namespace WF_MSA_calories
             Column1.ReadOnly = true;
             Column2.ReadOnly = false;
             Column3.ReadOnly = false;
+            Column4.ReadOnly = false;
+            Column5.ReadOnly = false;
+            Column6.ReadOnly = false;
             button1.Text = "Изменить";
         }
     }
