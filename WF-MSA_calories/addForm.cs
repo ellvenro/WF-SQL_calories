@@ -111,9 +111,9 @@ namespace WF_MSA_calories
                                 $"VALUES (\"{j}\", \"{dataGridView1[0, i].Value.ToString()}\", " +
                                 $"\"{int.Parse(dataGridView1[2, i].Value.ToString())}\", " +
                                 $"\"{int.Parse(dataGridView1[1, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[3, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[4, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[5, i].Value.ToString())}\" " +
+                                $"\"{float.Parse(dataGridView1[3, i].Value.ToString())}\", " +
+                                $"\"{float.Parse(dataGridView1[4, i].Value.ToString())}\", " +
+                                $"\"{float.Parse(dataGridView1[5, i].Value.ToString())}\" " +
                                 $")";
                             command = new OleDbCommand(query, myConnection);
                             command.ExecuteNonQuery();
@@ -127,14 +127,26 @@ namespace WF_MSA_calories
                     {
                         if (dataGridView1[1, i].Value.ToString() != "" && dataGridView1[2, i].Value.ToString() != "")
                         {
-                            query = $"UPDATE diet SET " +
+                            query = "";
+                            //query = $"UPDATE diet SET " +
+                            //    $"diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, " +
+                            //    $"diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())}, " +
+                            //    $"diet.d_belk = {float.Parse(dataGridView1[3, i].Value.ToString())}, " +
+                            //    $"diet.d_giri = {float.Parse(dataGridView1[4, i].Value.ToString())}, " +
+                            //    $"diet.d_ugl = {float.Parse(dataGridView1[5, i].Value.ToString())} " +
+                            //    $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"";
+                            command = new OleDbCommand(query, myConnection);
+
+                            command.CommandText = ($"UPDATE diet SET " +
                                 $"diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, " +
                                 $"diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())}, " +
-                                $"diet.d_belk = {int.Parse(dataGridView1[3, i].Value.ToString())}, " +
-                                $"diet.d_giri = {int.Parse(dataGridView1[4, i].Value.ToString())}, " +
-                                $"diet.d_ugl = {int.Parse(dataGridView1[5, i].Value.ToString())} " +
-                                $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"";
-                            command = new OleDbCommand(query, myConnection);
+                                "diet.d_belk = @sumb, " +
+                                "diet.d_giri = @sumg, " +
+                                "diet.d_ugl = @sumu " +
+                                $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"");
+                            command.Parameters.AddWithValue("@sumb", float.Parse(dataGridView1[3, i].Value.ToString()));
+                            command.Parameters.AddWithValue("@sumg", float.Parse(dataGridView1[4, i].Value.ToString()));
+                            command.Parameters.AddWithValue("@sumu", float.Parse(dataGridView1[5, i].Value.ToString()));
                             command.ExecuteNonQuery();
                         }
                     }

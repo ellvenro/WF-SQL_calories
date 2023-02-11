@@ -98,7 +98,7 @@ namespace WF_MSA_calories
                 int i = 0;
                 while (reader.Read())
                 {
-                    dataGridView1.Rows.Add("", "", "", "");
+                    dataGridView1.Rows.Add("", "", "", "", "", "", "");
                     dataGridView1.Rows[i].Cells[0].Value = reader[0].ToString();
                     string cb = dataGridView1.Rows[i].Cells[0].Value.ToString();
                     string query1 = $"SELECT diet.d_gramm, diet.d_ccal FROM diet WHERE diet.d_name=\"{reader[1].ToString()}\"";
@@ -112,15 +112,15 @@ namespace WF_MSA_calories
                         else
                             dataGridView1.Rows[i].Cells[3].Value = "0";
                         if (reader[4].ToString() != "")
-                            dataGridView1.Rows[i].Cells[4].Value = reader[4].ToString();
+                            dataGridView1.Rows[i].Cells[4].Value = Math.Round(float.Parse(reader[4].ToString()), 2).ToString();
                         else
                             dataGridView1.Rows[i].Cells[4].Value = "0";
                         if (reader[5].ToString() != "")
-                            dataGridView1.Rows[i].Cells[5].Value = reader[5].ToString();
+                            dataGridView1.Rows[i].Cells[5].Value = Math.Round(float.Parse(reader[5].ToString()), 2).ToString();
                         else
                             dataGridView1.Rows[i].Cells[5].Value = "0";
                         if (reader[6].ToString() != "")
-                            dataGridView1.Rows[i].Cells[6].Value = reader[6].ToString();
+                            dataGridView1.Rows[i].Cells[6].Value = Math.Round(float.Parse(reader[6].ToString()), 2).ToString();
                         else
                             dataGridView1.Rows[i].Cells[6].Value = "0";
                     }
@@ -195,7 +195,7 @@ namespace WF_MSA_calories
                         if (reader[2].ToString() != "")
                         {
                             float ccalBelk = float.Parse(reader[0].ToString()) * float.Parse(reader[2].ToString()) / (float)100;
-                            dataGridView1.Rows[e.RowIndex].Cells[4].Value = Math.Round(ccalBelk).ToString();
+                            dataGridView1.Rows[e.RowIndex].Cells[4].Value = Math.Round(ccalBelk, 2).ToString();
                         }
                         else
                             dataGridView1.Rows[e.RowIndex].Cells[4].Value = "0";
@@ -203,7 +203,7 @@ namespace WF_MSA_calories
                         if (reader[3].ToString() != "")
                         {
                             float ccalGiri = float.Parse(reader[0].ToString()) * float.Parse(reader[3].ToString()) / (float)100;
-                            dataGridView1.Rows[e.RowIndex].Cells[5].Value = Math.Round(ccalGiri).ToString();
+                            dataGridView1.Rows[e.RowIndex].Cells[5].Value = Math.Round(ccalGiri, 2).ToString();
                         }
                         else
                             dataGridView1.Rows[e.RowIndex].Cells[5].Value = "0";
@@ -211,7 +211,7 @@ namespace WF_MSA_calories
                         if (reader[4].ToString() != "")
                         {
                             float ccalUgl = float.Parse(reader[0].ToString()) * float.Parse(reader[4].ToString()) / (float)100;
-                            dataGridView1.Rows[e.RowIndex].Cells[6].Value = Math.Round(ccalUgl).ToString();
+                            dataGridView1.Rows[e.RowIndex].Cells[6].Value = Math.Round(ccalUgl, 2).ToString();
                         }
                         else
                             dataGridView1.Rows[e.RowIndex].Cells[6].Value = "0";
@@ -250,7 +250,7 @@ namespace WF_MSA_calories
                     {
                         float ccalBelk = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * 
                             float.Parse(reader[1].ToString()) / (float)100;
-                        dataGridView1.Rows[e.RowIndex].Cells[4].Value = Math.Round(ccalBelk).ToString();
+                        dataGridView1.Rows[e.RowIndex].Cells[4].Value = Math.Round(ccalBelk, 2).ToString();
                     }
                     else
                         dataGridView1.Rows[e.RowIndex].Cells[4].Value = "0";
@@ -259,7 +259,7 @@ namespace WF_MSA_calories
                     {
                         float ccalGiri = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * 
                             float.Parse(reader[2].ToString()) / (float)100;
-                        dataGridView1.Rows[e.RowIndex].Cells[5].Value = Math.Round(ccalGiri).ToString();
+                        dataGridView1.Rows[e.RowIndex].Cells[5].Value = Math.Round(ccalGiri, 2).ToString();
                     }
                     else
                         dataGridView1.Rows[e.RowIndex].Cells[5].Value = "0";
@@ -268,7 +268,7 @@ namespace WF_MSA_calories
                     {
                         float ccalUgl = float.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString()) * 
                             float.Parse(reader[3].ToString()) / (float)100;
-                        dataGridView1.Rows[e.RowIndex].Cells[6].Value = Math.Round(ccalUgl).ToString();
+                        dataGridView1.Rows[e.RowIndex].Cells[6].Value = Math.Round(ccalUgl, 2).ToString();
                     }
                     else
                         dataGridView1.Rows[e.RowIndex].Cells[6].Value = "0";
@@ -290,10 +290,10 @@ namespace WF_MSA_calories
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            int sum = 0;
-            int sumb = 0;
-            int sumg = 0;
-            int sumu = 0;
+            float sum = 0;
+            float sumb = 0;
+            float sumg = 0;
+            float sumu = 0;
             string query;
             OleDbCommand command;
             try
@@ -327,23 +327,27 @@ namespace WF_MSA_calories
                                 $"\"{dataGridView1[1, i].Value.ToString()}\", " +
                                 $"\"{int.Parse(dataGridView1[2, i].Value.ToString())}\", " +
                                 $"\"{int.Parse(dataGridView1[3, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[4, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[5, i].Value.ToString())}\", " +
-                                $"\"{int.Parse(dataGridView1[6, i].Value.ToString())}\"" +
+                                $"\"{float.Parse(dataGridView1[4, i].Value.ToString())}\", " +
+                                $"\"{float.Parse(dataGridView1[5, i].Value.ToString())}\", " +
+                                $"\"{float.Parse(dataGridView1[6, i].Value.ToString())}\"" +
                                 $")";
                             sum += int.Parse(dataGridView1[3, i].Value.ToString());
-                            sumb += int.Parse(dataGridView1[4, i].Value.ToString());
-                            sumg += int.Parse(dataGridView1[5, i].Value.ToString());
-                            sumu += int.Parse(dataGridView1[6, i].Value.ToString());
+                            sumb += float.Parse(dataGridView1[4, i].Value.ToString());
+                            sumg += float.Parse(dataGridView1[5, i].Value.ToString());
+                            sumu += float.Parse(dataGridView1[6, i].Value.ToString());
                         }
                         else
                             throw new Exception("Строка не заполнена");
                         command = new OleDbCommand(query, myConnection);
                         command.ExecuteNonQuery();
                     }
-                    query = $"UPDATE eating SET eating.e_ccal = {sum}, eating.e_belk = {sumb}, eating.e_giri = {sumg}, eating.e_ugl = {sumu} " +
-                        $"WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"";
-                    command = new OleDbCommand(query, myConnection);
+
+                    command.CommandText = ($"UPDATE eating SET eating.e_ccal = {sum}, eating.e_belk = @sumb, eating.e_giri = @sumg, eating.e_ugl = @sumu " +
+                        $"WHERE eating.e_meal=\"{comboBox1.SelectedItem.ToString()}\"");
+                    command.Parameters.AddWithValue("@sumb", float.Parse(sumb.ToString()));
+                    command.Parameters.AddWithValue("@sumg", float.Parse(sumg.ToString()));
+                    command.Parameters.AddWithValue("@sumu", float.Parse(sumu.ToString()));
+
                     command.ExecuteNonQuery();
                     Sum();
                 }
@@ -398,9 +402,9 @@ namespace WF_MSA_calories
                         sumu += float.Parse(dataGridView1[6, i].Value.ToString());
                 }
                 label3.Text = Math.Round(sum).ToString();
-                label9.Text = Math.Round(sumb).ToString();
-                label10.Text = Math.Round(sumg).ToString();
-                label11.Text = Math.Round(sumu).ToString();
+                label9.Text = Math.Round(sumb, 2).ToString();
+                label10.Text = Math.Round(sumg, 2).ToString(); ;
+                label11.Text = Math.Round(sumu, 2).ToString(); ;
 
                 //ККал за день
                 string query = $"SELECT Sum([e_ccal]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
@@ -410,18 +414,18 @@ namespace WF_MSA_calories
                 //Белки за день
                 query = $"SELECT Sum([e_belk]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
                 command = new OleDbCommand(query, myConnection);
-                buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sumb);
-                label14.Text = buf.ToString();
+                float buf1 = float.Parse(command.ExecuteScalar().ToString()) + sumb;
+                label14.Text = Math.Round(buf1, 2).ToString();
                 //Жиры за день
                 query = $"SELECT Sum([e_giri]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
                 command = new OleDbCommand(query, myConnection);
-                buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sumg);
-                label13.Text = buf.ToString();
+                buf1 = float.Parse(command.ExecuteScalar().ToString()) + sumg;
+                label13.Text = Math.Round(buf1, 2).ToString();
                 //Углкводы за день
                 query = $"SELECT Sum([e_ugl]) FROM eating WHERE e_meal<>\"{comboBox1.Text.ToString()}\"";
                 command = new OleDbCommand(query, myConnection);
-                buf = int.Parse(command.ExecuteScalar().ToString()) + (int)Math.Round(sumu);
-                label12.Text = buf.ToString();
+                buf1 = float.Parse(command.ExecuteScalar().ToString()) + sumu;
+                label12.Text = Math.Round(buf1, 2).ToString();
             }
             catch (Exception exp)
             {

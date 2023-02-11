@@ -47,9 +47,9 @@ namespace WF_MSA_calories
             OleDbCommand command = new OleDbCommand(query, myConnection);
             OleDbDataReader reader = command.ExecuteReader();
             int sum = 0;
-            int sumb = 0;
-            int sumg = 0;
-            int sumu = 0;
+            float sumb = 0;
+            float sumg = 0;
+            float sumu = 0;
             while (reader.Read())
             {
                 string query1 = $"SELECT day.d_name, day.d_gramm, day.d_ccal, d_belk, d_giri, d_ugl FROM [day] WHERE day.d_meal=\"{reader[0].ToString()}\"";
@@ -72,11 +72,13 @@ namespace WF_MSA_calories
                         }
                         if (cnt != 0)
                         {
-                            listL[i].Text = reader[1].ToString() + "/" + reader[2].ToString() + "/" + reader[3].ToString() + "/" + reader[4].ToString();
+                            listL[i].Text = reader[1].ToString() + "/" + Math.Round(float.Parse(reader[2].ToString()),2).ToString() + 
+                                "/" + Math.Round(float.Parse(reader[3].ToString()), 2).ToString() + 
+                                "/" + Math.Round(float.Parse(reader[4].ToString()), 2).ToString();
                             sum += int.Parse(reader[1].ToString());
-                            sumb += int.Parse(reader[2].ToString());
-                            sumg += int.Parse(reader[3].ToString());
-                            sumu += int.Parse(reader[4].ToString());
+                            sumb += float.Parse(reader[2].ToString());
+                            sumg += float.Parse(reader[3].ToString());
+                            sumu += float.Parse(reader[4].ToString());
                             listGB[i].Visible = true;
                             listLV[i].Visible = true;
                             listL[i].Visible = true;
@@ -87,7 +89,9 @@ namespace WF_MSA_calories
 
             }
             reader.Close();
-            label7.Text = sum.ToString() + "/" + sumb.ToString() + "/" + sumg.ToString() + "/" + sumu.ToString();
+            label7.Text = sum.ToString() + "/" + Math.Round(float.Parse(sumb.ToString()), 2).ToString() +
+                "/" + Math.Round(float.Parse(sumg.ToString()), 2).ToString() +
+                "/" + Math.Round(float.Parse(sumu.ToString()), 2).ToString();
         }
     }
 }
