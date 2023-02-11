@@ -65,15 +65,22 @@ namespace WF_MSA_calories
                             if (reader1[0].ToString() != "")
                             {
                                 listLV[i].Items.Add(reader1[0].ToString());
-                                listLV2[i].Items.Add(reader1[1].ToString() + "/" + reader1[2].ToString() + "/" + reader1[3].ToString() 
-                                    + "/" + reader1[4].ToString() + "/" + reader1[5].ToString());
-                cnt++;
+
+                                ListViewItem item = new ListViewItem(new[] { reader1[1].ToString(),
+                                        reader1[2].ToString(),
+                                        Math.Round(float.Parse(reader1[3].ToString()), 2).ToString(),
+                                        Math.Round(float.Parse(reader1[4].ToString()), 2).ToString(),
+                                        Math.Round(float.Parse(reader1[5].ToString()), 2).ToString() });
+                                listLV2[i].Items.Add(item);
+
+                                cnt++;
                             }
                         }
                         if (cnt != 0)
                         {
-                            listL[i].Text = reader[1].ToString() + "/" + Math.Round(float.Parse(reader[2].ToString()),2).ToString() + 
-                                "/" + Math.Round(float.Parse(reader[3].ToString()), 2).ToString() + 
+
+                            listL[i].Text = reader[1].ToString() + "/" + Math.Round(float.Parse(reader[2].ToString()), 2).ToString() +
+                                "/" + Math.Round(float.Parse(reader[3].ToString()), 2).ToString() +
                                 "/" + Math.Round(float.Parse(reader[4].ToString()), 2).ToString();
                             sum += int.Parse(reader[1].ToString());
                             sumb += float.Parse(reader[2].ToString());
@@ -82,7 +89,8 @@ namespace WF_MSA_calories
                             listGB[i].Visible = true;
                             listLV[i].Visible = true;
                             listL[i].Visible = true;
-                            listLV2[i].Visible = true;
+                            listLV2[i].Visible = true;                                
+                            
                         }
                     }
                 reader1.Close();
