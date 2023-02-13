@@ -426,6 +426,14 @@ namespace WF_MSA_calories
                 command = new OleDbCommand(query, myConnection);
                 buf1 = float.Parse(command.ExecuteScalar().ToString()) + sumu;
                 label12.Text = Math.Round(buf1, 2).ToString();
+
+                //Нормы БЖУ
+                //Белки
+                label22.Text = Math.Round((float)buf * 0.3 / (float)4, 2).ToString();
+                //Жиры
+                label20.Text = Math.Round((float)buf * 0.3 / (float)9, 2).ToString();
+                //Углеводы
+                label18.Text = Math.Round((float)buf * 0.4 / (float)4, 2).ToString();
             }
             catch (Exception exp)
             {
@@ -462,6 +470,9 @@ namespace WF_MSA_calories
             label12.Text = "0";
             label13.Text = "0";
             label14.Text = "0";
+            label22.Text = "0";
+            label20.Text = "0";
+            label18.Text = "0";
 
         }
 

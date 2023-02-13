@@ -31,6 +31,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -54,16 +61,17 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.Column1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -102,6 +110,53 @@
             this.dataGridView1.Size = new System.Drawing.Size(951, 346);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Категория";
+            this.Column1.Name = "Column1";
+            this.Column1.Width = 150;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Продукт";
+            this.Column2.Name = "Column2";
+            this.Column2.Width = 150;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Вес, г";
+            this.Column3.Name = "Column3";
+            this.Column3.Width = 70;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "кКал";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Column4.Width = 70;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Белки";
+            this.Column5.Name = "Column5";
+            this.Column5.ReadOnly = true;
+            this.Column5.Width = 70;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "Жиры";
+            this.Column6.Name = "Column6";
+            this.Column6.ReadOnly = true;
+            this.Column6.Width = 70;
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "Углеводы";
+            this.Column7.Name = "Column7";
+            this.Column7.ReadOnly = true;
+            this.Column7.Width = 70;
             // 
             // label2
             // 
@@ -331,58 +386,81 @@
             this.label17.TabIndex = 16;
             this.label17.Text = "белки:";
             // 
-            // Column1
+            // groupBox3
             // 
-            this.Column1.HeaderText = "Категория";
-            this.Column1.Name = "Column1";
-            this.Column1.Width = 150;
+            this.groupBox3.Controls.Add(this.label18);
+            this.groupBox3.Controls.Add(this.label20);
+            this.groupBox3.Controls.Add(this.label22);
+            this.groupBox3.Controls.Add(this.label23);
+            this.groupBox3.Controls.Add(this.label24);
+            this.groupBox3.Controls.Add(this.label25);
+            this.groupBox3.Location = new System.Drawing.Point(972, 220);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(186, 76);
+            this.groupBox3.TabIndex = 22;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Нормы БЖУ";
             // 
-            // Column2
+            // label18
             // 
-            this.Column2.HeaderText = "Продукт";
-            this.Column2.Name = "Column2";
-            this.Column2.Width = 150;
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(104, 52);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(54, 17);
+            this.label18.TabIndex = 20;
+            this.label18.Text = "label18";
             // 
-            // Column3
+            // label20
             // 
-            this.Column3.HeaderText = "Вес, г";
-            this.Column3.Name = "Column3";
-            this.Column3.Width = 70;
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(104, 35);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(54, 17);
+            this.label20.TabIndex = 21;
+            this.label20.Text = "label20";
             // 
-            // Column4
+            // label22
             // 
-            this.Column4.HeaderText = "кКал";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Column4.Width = 70;
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(104, 17);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(54, 17);
+            this.label22.TabIndex = 19;
+            this.label22.Text = "label22";
             // 
-            // Column5
+            // label23
             // 
-            this.Column5.HeaderText = "Белки";
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
-            this.Column5.Width = 70;
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 35);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 17);
+            this.label23.TabIndex = 17;
+            this.label23.Text = "жиры:";
             // 
-            // Column6
+            // label24
             // 
-            this.Column6.HeaderText = "Жиры";
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
-            this.Column6.Width = 70;
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 52);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(73, 17);
+            this.label24.TabIndex = 18;
+            this.label24.Text = "углеводы:";
             // 
-            // Column7
+            // label25
             // 
-            this.Column7.HeaderText = "Углеводы";
-            this.Column7.Name = "Column7";
-            this.Column7.ReadOnly = true;
-            this.Column7.Width = 70;
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 18);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(51, 17);
+            this.label25.TabIndex = 16;
+            this.label25.Text = "белки:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1166, 442);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button5);
@@ -402,6 +480,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,6 +522,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label25;
     }
 }
 
