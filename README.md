@@ -57,18 +57,19 @@ while (reader.Read())
 reader.Close();
 ...
 //Запрос на удаление
-query = $"DELETE diet.d_name FROM diet WHERE diet.d_name = " + $"\"{dataGridView1[0, dataGridView1.SelectedRows[0].Index].Value.ToString()}\"";
+query = $"DELETE diet.d_name FROM diet WHERE diet.d_name = " + 
+    $"\"{dataGridView1[0, dataGridView1.SelectedRows[0].Index].Value.ToString()}\"";
 command = new OleDbCommand(query, myConnection);
 command.ExecuteNonQuery();
 ...
 //Запрос на обновление
 command.CommandText = ($"UPDATE diet SET " +
-  $"diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, " +
-  $"diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())}, " +
-  "diet.d_belk = @sumb, " +
-  "diet.d_giri = @sumg, " +
-  "diet.d_ugl = @sumu " +
-  $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"");
+    $"diet.d_ccal = {int.Parse(dataGridView1[2, i].Value.ToString())}, " +
+    $"diet.d_gramm = {int.Parse(dataGridView1[1, i].Value.ToString())}, " +
+    "diet.d_belk = @sumb, " +
+    "diet.d_giri = @sumg, " +
+    "diet.d_ugl = @sumu " +
+    $" WHERE diet.d_name=\"{dataGridView1[0, i].Value.ToString()}\"");
 command.Parameters.AddWithValue("@sumb", float.Parse(dataGridView1[3, i].Value.ToString()));
 command.Parameters.AddWithValue("@sumg", float.Parse(dataGridView1[4, i].Value.ToString()));
 command.Parameters.AddWithValue("@sumu", float.Parse(dataGridView1[5, i].Value.ToString()));
