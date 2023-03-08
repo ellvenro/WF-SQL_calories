@@ -23,6 +23,13 @@ namespace WF_MSA_calories
         public List<ListView> listLV2 = new List<ListView>();
         public List<Label> listL = new List<Label>();
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            e.Graphics.DrawRectangle(new Pen(Color.Black), new Rectangle(label7.Location.X - 1, label7.Location.Y - 1, label7.Width + 1, label7.Height + 1));
+
+        }
+
         public reportForm(OleDbConnection Connection)
         {
             InitializeComponent();
@@ -79,9 +86,9 @@ namespace WF_MSA_calories
                         if (cnt != 0)
                         {
 
-                            listL[i].Text = reader[1].ToString() + "/" + Math.Round(float.Parse(reader[2].ToString()), 2).ToString() +
-                                "/" + Math.Round(float.Parse(reader[3].ToString()), 2).ToString() +
-                                "/" + Math.Round(float.Parse(reader[4].ToString()), 2).ToString();
+                            listL[i].Text = reader[1].ToString() + " / " + Math.Round(float.Parse(reader[2].ToString()), 2).ToString() +
+                                " / " + Math.Round(float.Parse(reader[3].ToString()), 2).ToString() +
+                                " / " + Math.Round(float.Parse(reader[4].ToString()), 2).ToString();
                             sum += int.Parse(reader[1].ToString());
                             sumb += float.Parse(reader[2].ToString());
                             sumg += float.Parse(reader[3].ToString());
@@ -97,9 +104,9 @@ namespace WF_MSA_calories
 
             }
             reader.Close();
-            label7.Text = sum.ToString() + "/" + Math.Round(float.Parse(sumb.ToString()), 2).ToString() +
-                "/" + Math.Round(float.Parse(sumg.ToString()), 2).ToString() +
-                "/" + Math.Round(float.Parse(sumu.ToString()), 2).ToString();
+            label7.Text = sum.ToString() + " / " + Math.Round(float.Parse(sumb.ToString()), 1).ToString() +
+                " / " + Math.Round(float.Parse(sumg.ToString()), 1).ToString() +
+                " / " + Math.Round(float.Parse(sumu.ToString()), 1).ToString();
         }
     }
 }
