@@ -621,6 +621,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1489, 569);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.dateTimePicker1);
